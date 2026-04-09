@@ -1,5 +1,6 @@
 <script>
     import fuzzysort from 'fuzzysort'
+    import { i18n } from '@/locales/i18n'
 
     import { mapState, mapActions } from 'pinia'
     import { SCRATCH_FILE_NAME } from "../common/constants"
@@ -134,7 +135,7 @@
                     }
                     
                     const newNoteItem = {
-                        name: "Create new…", 
+                        name: i18n.t('bufferSelector.createNew'), 
                         createNew:true,
                     }
                     return [
