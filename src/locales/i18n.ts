@@ -1,7 +1,7 @@
 import { App, Plugin, ref, reactive, computed } from 'vue';
 
 // Type definitions
-export type Locale = 'en' | 'zh';
+export type Locale = 'en' | 'zh' | 'ja' | 'ko' | 'zh-TW';
 
 // Built-in minimal English fallback dictionary to prevent missing text when locale loading fails
 const FALLBACK_DICTIONARY: any = {
@@ -11,6 +11,9 @@ const FALLBACK_DICTIONARY: any = {
 // Attempt to load locale files, use fallback dictionary on failure
 let enMessages: any;
 let zhMessages: any;
+let jaMessages: any;
+let koMessages: any;
+let zhTwMessages: any;
 
 try {
   enMessages = require('./en.js').default;
@@ -26,9 +29,33 @@ try {
   zhMessages = enMessages; // Fallback to English
 }
 
+try {
+  jaMessages = require('./ja.js').default;
+} catch (e) {
+  console.warn('[i18n] Failed to load Japanese locale, using English fallback.');
+  jaMessages = enMessages; // Fallback to English
+}
+
+try {
+  koMessages = require('./ko.js').default;
+} catch (e) {
+  console.warn('[i18n] Failed to load Korean locale, using English fallback.');
+  koMessages = enMessages; // Fallback to English
+}
+
+try {
+  zhTwMessages = require('./zh-TW.js').default;
+} catch (e) {
+  console.warn('[i18n] Failed to load Traditional Chinese locale, using English fallback.');
+  zhTwMessages = enMessages; // Fallback to English
+}
+
 const messages: Record<Locale, any> = {
   en: enMessages,
   zh: zhMessages,
+  ja: jaMessages,
+  ko: koMessages,
+  'zh-TW': zhTwMessages,
 };
 
 /**
@@ -100,8 +127,11 @@ export function createI18n(initialLocale: Locale = 'en') {
   // Detect language from browser
   try {
     if (typeof navigator !== 'undefined' && navigator.language) {
-      const browserLang = navigator.language.split('-')[0] as Locale;
-      if (browserLang === 'zh' || browserLang === 'en') {
+      let browserLang = navigator.language.split('-')[0] as Locale;
+      if (navigator.language === 'zh-TW' || navigator.language === 'zh-HK' || navigator.language === 'zh-MO') {
+        browserLang = 'zh-TW';
+      }
+      if (browserLang === 'zh' || browserLang === 'en' || browserLang === 'ja' || browserLang === 'ko' || browserLang === 'zh-TW') {
         currentLocale.value = browserLang;
       }
     }
@@ -112,8 +142,11 @@ export function createI18n(initialLocale: Locale = 'en') {
   // Attempt to get system language from Electron main process
   if (typeof window !== 'undefined' && (window as any).heynote?.getSystemLocale) {
     (window as any).heynote.getSystemLocale().then((systemLocale: string) => {
-      const locale = systemLocale.split('-')[0] as Locale;
-      if (locale === 'zh' || locale === 'en') {
+      let locale = systemLocale.split('-')[0] as Locale;
+      if (systemLocale === 'zh-TW' || systemLocale === 'zh-HK' || systemLocale === 'zh-MO') {
+        locale = 'zh-TW';
+      }
+      if (locale === 'zh' || locale === 'en' || locale === 'ja' || locale === 'ko' || locale === 'zh-TW') {
         currentLocale.value = locale;
       }
     }).catch(() => {});

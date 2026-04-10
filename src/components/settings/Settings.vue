@@ -1,7 +1,7 @@
 <script>
     import { toRaw} from 'vue';
     import { mapStores, mapState } from 'pinia'
-    import { i18n } from '@/locales/i18n'
+    import { i18n } from "../../locales/i18n"
     import { useSettingsStore } from "@/src/stores/settings-store.js"
 
     import { LANGUAGES } from '../../editor/languages.js'
@@ -360,7 +360,10 @@
                                 <h2>{{ $t('settings.language') }}</h2>
                                 <select v-model="language" @change="updateLanguage" class="language">
                                     <option :selected="language === 'zh'" value="zh">{{ $t('settings.chineseSimplified') }}</option>
+                                    <option :selected="language === 'zh-TW'" value="zh-TW">{{ $t('settings.chineseTraditional') }}</option>
                                     <option :selected="language === 'en'" value="en">{{ $t('settings.english') }}</option>
+                                    <option :selected="language === 'ja'" value="ja">{{ $t('settings.japanese') }}</option>
+                                    <option :selected="language === 'ko'" value="ko">{{ $t('settings.korean') }}</option>
                                 </select>
                             </div>
                         </div>

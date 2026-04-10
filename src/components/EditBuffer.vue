@@ -1,7 +1,7 @@
 <script>
     import { toRaw } from 'vue';
     import { mapState, mapActions } from 'pinia'
-    import { i18n } from '@/locales/i18n'
+    import { i18n } from "../locales/i18n"
     import { useHeynoteStore } from "../stores/heynote-store"
     import { filenameSlug } from "@/src/common/sanitize-filename"
 
