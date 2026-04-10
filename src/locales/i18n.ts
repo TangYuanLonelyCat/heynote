@@ -1,124 +1,5 @@
 import { App, Plugin, ref, reactive, computed } from 'vue';
-
-// Type definitions
-export type Locale = 'en' | 'zh' | 'ja' | 'ko' | 'zh-TW';
-
-// Built-in minimal English fallback dictionary to prevent missing text when locale loading fails
-const FALLBACK_DICTIONARY: any = {
-  common: { close: 'Close', cancel: 'Cancel', save: 'Save' }
-};
-
-// Attempt to load locale files, use fallback dictionary on failure
-let enMessages: any;
-let zhMessages: any;
-let jaMessages: any;
-let koMessages: any;
-let zhTwMessages: any;
-
-try {
-  enMessages = require('./en.js').default;
-} catch (e) {
-  console.warn('[i18n] Failed to load English locale, using fallback.');
-  enMessages = FALLBACK_DICTIONARY;
-}
-
-try {
-  zhMessages = require('./zh.js').default;
-} catch (e) {
-  console.warn('[i18n] Failed to load Chinese locale, using English fallback.');
-  zhMessages = enMessages; // Fallback to English
-}
-
-try {
-  jaMessages = require('./ja.js').default;
-} catch (e) {
-  console.warn('[i18n] Failed to load Japanese locale, using English fallback.');
-  jaMessages = enMessages; // Fallback to English
-}
-
-try {
-  koMessages = require('./ko.js').default;
-} catch (e) {
-  console.warn('[i18n] Failed to load Korean locale, using English fallback.');
-  koMessages = enMessages; // Fallback to English
-}
-
-try {
-  zhTwMessages = require('./zh-TW.js').default;
-} catch (e) {
-  console.warn('[i18n] Failed to load Traditional Chinese locale, using English fallback.');
-  zhTwMessages = enMessages; // Fallback to English
-}
-
-const messages: Record<Locale, any> = {
-  en: enMessages,
-  zh: zhMessages,
-  ja: jaMessages,
-  ko: koMessages,
-  'zh-TW': zhTwMessages,
-};
-
-/**
- * Safe translation function: never throws exceptions
- */
-export function safeTranslate(
-  locale: Locale,
-  key: string,
-  params?: Record<string, any>,
-  fallbackLocale: Locale = 'en'
-): string {
-  try {
-    // 1. Split path by dots
-    const keys = key.split('.');
-    
-    // 2. Look up in current locale
-    let result = messages[locale];
-    for (const k of keys) {
-      if (result && typeof result === 'object' && k in result) {
-        result = result[k];
-      } else {
-        result = undefined;
-        break;
-      }
-    }
-    
-    // 3. Fallback to English if not found
-    if (typeof result !== 'string') {
-      result = messages[fallbackLocale];
-      for (const k of keys) {
-        if (result && typeof result === 'object' && k in result) {
-          result = result[k];
-        } else {
-          result = undefined;
-          break;
-        }
-      }
-    }
-    
-    // 4. Still not found, return original key (better than blank)
-    if (typeof result !== 'string') {
-      return key;
-    }
-    
-    // 5. Interpolation handling (safely wrapped)
-    if (params) {
-      Object.keys(params).forEach(p => {
-        result = result.replace(new RegExp(`{${p}}`, 'g'), String(params[p]));
-      });
-      // Simple plural handling
-      if (params.count !== undefined) {
-        result = result.replace(/{count, plural, one{(.*?)} other{(.*?)}}/g,
-          (_, one, other) => (params.count === 1 ? one : other)
-        );
-      }
-    }
-    
-    return result;
-  } catch (e) {
-    console.error(`[i18n] Translation error for key "${key}"`, e);
-    return key; // Final fallback: return key name
-  }
-}
+import { safeTranslate, Locale, messages } from './i18n-core';
 
 // Vue plugin version
 export function createI18n(initialLocale: Locale = 'en') {
@@ -133,6 +14,9 @@ export function createI18n(initialLocale: Locale = 'en') {
       }
       if (browserLang === 'zh' || browserLang === 'en' || browserLang === 'ja' || browserLang === 'ko' || browserLang === 'zh-TW') {
         currentLocale.value = browserLang;
+      } else {
+        // Default to English for unsupported languages
+        currentLocale.value = 'en';
       }
     }
   } catch (e) {
@@ -148,6 +32,9 @@ export function createI18n(initialLocale: Locale = 'en') {
       }
       if (locale === 'zh' || locale === 'en' || locale === 'ja' || locale === 'ko' || locale === 'zh-TW') {
         currentLocale.value = locale;
+      } else {
+        // Default to English for unsupported languages
+        currentLocale.value = 'en';
       }
     }).catch(() => {});
   }

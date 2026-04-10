@@ -75,6 +75,10 @@
                     bindings: this.commandKeyBindingsMap[cmdKey],
                 }))
             },
+            
+            currentLocale() {
+                return i18n.locale
+            },
 
             orderedItems() {
                 const sortKeys = Object.fromEntries(this.recentBufferPaths.map((item, idx) => [item, idx]))
@@ -102,8 +106,11 @@
             },
 
             filteredItems() {
+                // Access currentLocale to make this computed property depend on it
+                this.currentLocale
+                
                 if (this.commandsEnabled && this.filter.startsWith(">")) {
-                    // command mode if the first character is ">"
+                    // command mode if the first character is ">
                     if (this.filter.length < 2) {
                         return this.commands
                     }
