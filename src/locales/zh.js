@@ -203,6 +203,7 @@ export default {
     toggleBlockComment: '切换块注释',
     toggleLineComment: '切换行注释',
     insertTab: '插入制表符',
+    toggleLeftPanel: '切换左侧边栏面板',
     cursorCharLeft: '向左移动光标',
     cursorCharRight: '向右移动光标',
     cursorCharBackward: '向后移动光标',

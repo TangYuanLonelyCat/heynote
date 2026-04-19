@@ -84,6 +84,7 @@ You can see all the key bindings in the command palette and in Settings under Ke
 
 
 
+
 ## Custom Key Bindings<a id="custom-key-bindings"></a>
 
 Heynote supports custom key bindings which you can configure in the settings. The key bindings are evaluated from top to bottom, so a binding that comes before another one will take precedence. Most commands will stop the event from propagating, but some commands only applies in certain contexts and might not stop the event from propagating to a later key binding. 

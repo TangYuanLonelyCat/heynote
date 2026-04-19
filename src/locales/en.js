@@ -203,6 +203,7 @@ export default {
     toggleBlockComment: 'Toggle block comment',
     toggleLineComment: 'Toggle line comment',
     insertTab: 'Insert tab',
+    toggleLeftPanel: 'Toggle left sidebar panel',
     cursorCharLeft: 'Move cursor left',
     cursorCharRight: 'Move cursor right',
     cursorCharBackward: 'Move cursor backward',

@@ -203,6 +203,7 @@ export default {
     toggleBlockComment: '블록 주석 전환',
     toggleLineComment: '줄 주석 전환',
     insertTab: '탭 삽입',
+    toggleLeftPanel: '왼쪽 사이드바 패널 전환',
     cursorCharLeft: '커서 왼쪽으로 이동',
     cursorCharRight: '커서 오른쪽으로 이동',
     cursorCharBackward: '커서 뒤로 이동',

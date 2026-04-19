@@ -203,6 +203,7 @@ export default {
     toggleBlockComment: 'ブロックコメントを切り替え',
     toggleLineComment: '行コメントを切り替え',
     insertTab: 'タブを挿入',
+    toggleLeftPanel: '左サイドバーパネルを切り替える',
     cursorCharLeft: 'カーソルを左に移動',
     cursorCharRight: 'カーソルを右に移動',
     cursorCharBackward: 'カーソルを後ろに移動',
